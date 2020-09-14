@@ -16,8 +16,6 @@ public class CarController : MonoBehaviour
     public bool button4 = false;
     public bool button5 = false;
 
-
-
     LogitechGSDK.LogiControllerPropertiesData properties;
 
     private void Start()
