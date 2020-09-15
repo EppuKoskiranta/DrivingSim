@@ -23,8 +23,8 @@ public class Car : MonoBehaviour
         RIGHTBLINKER = 0x04,
     }
 
-    LightMode lightMode;
-    uint lights;
+    LightMode lightMode = LightMode.DEFAULT;
+    uint lights = 0x01;
 
     //Wipers
     enum Wipers
@@ -80,19 +80,36 @@ public class Car : MonoBehaviour
 
     GearSystem gearSystem = GearSystem.AUTOMATIC;
 
+
+    public enum AutomaticGearMode
+    {
+        PARK = 0,
+        REVERSE,
+        NEUTRAL,
+        DRIVE,
+    }
+
+    AutomaticGearMode automaticGearMode = AutomaticGearMode.PARK;
+
     //Motor stuff
     bool automatic = true;
-    bool handbreak = false;
+    bool handbrake = false;
+    bool engineOn = false;
+    float maxSpeed = 250f;
+    float maxRPM = 6500f;
     float fuel = 70.0f;
     float roundsPerMinute = 0f;
-    float rpmReduction = 200f;
+    float rpmReduction = 1000f;
     float speed = 0f; //    km/h
     float horsePower = 200f;
     float motorTorque = 0f;
 
+
     int activeGear = 0;
     int maxGear = 5;
     float[] gear = { 3.166f, 1.882f, 1.296f, 0.972f, 0.738f, 0.600f };
+
+    float reverseGear = 2.6f;
     
     float tyreCircumference = 1.99271f;
     float differentialRatio = 4.1f;
@@ -106,11 +123,12 @@ public class Car : MonoBehaviour
     float Cd = 0.35f; //coefficient
     float volume = 3.11f; //volume
     float density = 0f;
-    float dragArea = 1f; //squaremeters (estimate)
+    float dragArea = 2.5f; //squaremeters (estimate)
      
 
     //References
     public CarController controller;
+    public Rigidbody rb;
 
     //Extras
     //like radio feat. skirmish beats
@@ -123,6 +141,16 @@ public class Car : MonoBehaviour
         CarInit();
     }
 
+    void Update()
+    {
+        if (!engineOn)
+            StartEngine();
+
+        if (engineOn)
+        {
+            CarUpdate();
+        }
+    }
 
     void CarInit()
     {
@@ -130,6 +158,8 @@ public class Car : MonoBehaviour
         if (!controller)
             controller = this.gameObject.GetComponent<CarController>();
 
+        if (!rb)
+            rb = this.gameObject.GetComponent<Rigidbody>();
 
 
         //Setup wheels
@@ -161,78 +191,161 @@ public class Car : MonoBehaviour
 
 
         tyreCircumference = wheels[0].wheel.radius * Mathf.PI * 2;
+
+
+        wheels[0].wheel.ConfigureVehicleSubsteps(5.0f, 5, 2);
     }
 
 
-
-    void Update()
+    void CarUpdate()
     {
+        //Take all inputs from controller
+        /*
+        
+
+        SwitchDriveMode()
+
+        Gas()
+        {
+            Read gasPedal value 0 - 1
+            Increase roundsPerMinute with gasPedal
+                
+            SwitchGear();
+            
+            CalculateTorque()
+            ApplyTorque()
+            
+            CalculateForcesAgainstMovement()
+            {
+                AirResistance
+                InternalExternal friction (includes engine friction, friction with gears, wheels friction)
+                
+            }
+
+
+            ReduceRoundsPerMinute()
+        }
+
+        Brake()
+        {
+            Read brakePedal value 0 - 1
+            ApplyBrakeTorque to wheels
+        }
+
+
+        Handbrake()
+        {
+            check if handbrake on
+            applybraketorque
+        }
+
+        Steer()
+        {
+            Read steeringWheel value -1 to 1
+            apply angle to wheels
+        }
+        
+        Inputs()
+        {
+            Wipers/Turn signals
+        }
+        
+
+        DebugValues()
+
+         */
+
+
+        //Gas
+        SwitchDriveMode();
         AddGas();
-        SwitchGearAutomatic();
-        Steer();
         Brake();
-        CalculateTorque();
-        DebugSomeValues();
-        ApplyTorqueToWheels();
+        Handbrake();
+        Steer();
         CalculateSpeed();
+        DebugSomeValues();
+    }
+
+    void StartEngine()
+    {
+        if (controller.startEngine)
+        {
+            engineOn = true;
+            controller.startEngine = false;
+            Debug.Log("Started Engine!! VROM VROM!");
+            //play audio
+        }
     }
 
 
+    void Gas()
+    {
+        //increase rounds if gas pedal is pressed
+        if (controller.gasPedal > 0 && speed < maxSpeed && engineOn)
+        {
+            roundsPerMinute += controller.gasPedal * gear[activeGear] * 200f * Time.deltaTime;
+        }
+        else
+        {
+            if (roundsPerMinute > 0 && wheels[0].wheel.rpm != 0)
+                roundsPerMinute -= (rpmReduction * Time.deltaTime);
+            else if (roundsPerMinute > 0 && wheels[0].wheel.rpm == 0)
+                roundsPerMinute -= rpmReduction * 1.5f * Time.deltaTime;
+            else
+                roundsPerMinute = 0;
+        }
+
+    }
 
 
     void AddGas()
     {
-        //increase rounds if gas pedal is pressed
-        if (controller.gasPedal > 0)
-        {
-            roundsPerMinute += controller.gasPedal * gear[activeGear] * 200f * (float)Time.deltaTime;
-        }
-        else
-        {
-            if (roundsPerMinute > 0)
-                roundsPerMinute -= rpmReduction * (float)Time.deltaTime;
-        }
 
+        float gas = controller.gasPedal;
+        if (roundsPerMinute < maxRPM)
+            roundsPerMinute += gas * 5000f * Time.deltaTime;
+
+        if (automatic)
+            SwitchGearAutomatic();
+
+        CalculateTorque();
+        ApplyTorqueToWheels();
+
+        ReduceRoundsPerMinute();
     }
 
 
-    void CalculateSpeed()
+    /// <summary>
+    /// Air resistance, engine friction, wheels friction, gears friction
+    /// </summary>
+    float CalculateFrictionForces()
     {
-        float speedAverage = 0f;
-        switch (wheelMode)
-        {
-            case WheelDrive.FRONTWHEEL:
-                foreach (Wheel w in wheels)
-                {
-                    if (w.axis == CarAxis.FRONT)
-                        speedAverage += w.wheel.rpm / 60 * tyreCircumference;
-                }
+        float totalFriction = 0;
 
-                speed = speedAverage / 2;
-                break;
-            case WheelDrive.REARWHEEL:
-                foreach (Wheel w in wheels)
-                {
-                    if (w.axis == CarAxis.REAR)
-                        speedAverage += w.wheel.rpm / 60 * tyreCircumference;
-                }
+        rb.AddForce(-this.transform.forward * AirResistance());
 
-                speed = speedAverage / 2;
-                break;
-            case WheelDrive.ALLWHEEL:
-                foreach (Wheel w in wheels)
-                {
-                     speedAverage += w.wheel.rpm / 60 * tyreCircumference;
-                }
+        //TODO calculate real values
 
-                speed = speedAverage / 4 * 3.6f;
-                break;
-        }
+        totalFriction += 0f;
+
+        totalFriction += 100 * ((1 / gear[activeGear]) * (roundsPerMinute / speed));
+
+        
+        return totalFriction;
+    }
+
+
+    void ReduceRoundsPerMinute()
+    {
+        if (roundsPerMinute > 0)
+            roundsPerMinute -= CalculateFrictionForces() * Time.deltaTime;
+        else
+            roundsPerMinute = 0;
     }
 
     void Steer()
     {
-        float turnProgress = Mathf.InverseLerp(-100, 100, controller.steeringWheel);
+        float turnProgress = Mathf.InverseLerp(-1, 1, controller.steeringWheel);
         float wheelAngle = Mathf.Lerp(-maxWheelAngle, maxWheelAngle, turnProgress);
 
         //Turn wheel component
@@ -249,6 +362,63 @@ public class Car : MonoBehaviour
 
     }
 
+
+    void SwitchDriveMode()
+    {
+        if (controller.brakePedal > 0)
+        {
+            if (controller.gearDown)
+            {
+                int activeGearMode = (int)automaticGearMode;
+
+                if (activeGearMode != 0)
+                    activeGearMode--;
+
+                automaticGearMode = (AutomaticGearMode)activeGearMode;
+
+                controller.gearDown = false;
+            }
+            else if (controller.gearUp)
+            {
+                int activeGearMode = (int)automaticGearMode;
+
+                if (activeGearMode != 3)
+                    activeGearMode++;
+
+                automaticGearMode = (AutomaticGearMode)activeGearMode;
+
+                controller.gearUp = false;
+            }
+        }
+
+
+        Debug.Log("ActiveGearMode: " + automaticGearMode);
+    }
+
+    void CalculateSpeed()
+    {
+        //TODO make a way calculate speed
+        speed = rb.velocity.magnitude * 3.6f;
+
+    }
+
+    float AirResistance()
+    {
+        return 0;
+        //return Cd * (density * Mathf.Pow(speed, 2) / 2) * dragArea;
+    }
+
+
+    void Handbrake()
+    {
+        if (handbrake)
+        {
+            foreach (Wheel w in wheels)
+            {
+                w.wheel.brakeTorque = 10000f;
+            }
+        }
+    }
 
     void Brake()
     {
@@ -304,28 +474,37 @@ public class Car : MonoBehaviour
 
     void CalculateTorque()
     {
-        if (roundsPerMinute != 0 && controller.gasPedal != 0)
-            motorTorque = horsePower / (roundsPerMinute / 5252);
-        else
-            motorTorque = 0;
+        if (engineOn)
+        {
+            if (roundsPerMinute != 0 && controller.gasPedal != 0)
+                motorTorque = horsePower / (roundsPerMinute / 5252);
+            else
+                motorTorque = 0;
+        }
 
 
         if (motorTorque < 0)
             motorTorque = 0;
+
     }
 
 
     void DebugSomeValues()
     {
-        //Debug.Log("InverseLerp value: " + Mathf.InverseLerp(-3000f, 3000f, gasPedal));
-        Debug.Log("Gear" + activeGear + "Ratio: " + gear[activeGear]);
-        Debug.Log("RPM:" + roundsPerMinute);
-        Debug.Log("Torque:" + motorTorque);
-        Debug.Log("Speed: " + speed);
+        Debug.Log("RPM: " + roundsPerMinute);
+        //Debug.Log("Speed: " + speed);
     }
 
     void ApplyTorqueToWheels()
     {
+        float motorTorqueDir = 0f;
+        if (automaticGearMode == AutomaticGearMode.DRIVE)
+            motorTorqueDir = this.motorTorque;
+
+        if (automaticGearMode == AutomaticGearMode.REVERSE)
+            motorTorqueDir = -this.motorTorque;
+
+
         if (controller.gasPedal > 0)
         {
             switch (wheelMode)
@@ -335,7 +514,7 @@ public class Car : MonoBehaviour
                     {
                         if (w.axis == CarAxis.FRONT)
                         {
-                            w.wheel.motorTorque = this.motorTorque;
+                            w.wheel.motorTorque = motorTorqueDir;
                         }
                     }
                     break;
@@ -344,14 +523,14 @@ public class Car : MonoBehaviour
                     {
                         if (w.axis == CarAxis.REAR)
                         {
-                            w.wheel.motorTorque = this.motorTorque;
+                            w.wheel.motorTorque = motorTorqueDir;
                         }
                     }
                     break;
                 case WheelDrive.ALLWHEEL:
                     foreach (Wheel w in wheels)
                     {
-                        w.wheel.motorTorque = this.motorTorque;
+                        w.wheel.motorTorque = motorTorqueDir;
                     }
                     break;
             }
@@ -364,6 +543,17 @@ public class Car : MonoBehaviour
             }
         }
     }
+
+
+    void WidgetInputs()
+    {
+
+    }
+
+
+
+
+
 
 
 }

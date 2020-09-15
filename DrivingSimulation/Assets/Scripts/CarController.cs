@@ -12,9 +12,10 @@ public class CarController : MonoBehaviour
 
     public bool gearUp = false;
     public bool gearDown = false;
-    public bool button3 = false;
-    public bool button4 = false;
-    public bool button5 = false;
+    public bool startEngine = false;
+    public bool handbrake = false;
+    public bool blinkerLeft = false;
+    public bool blinkerRight = false;
 
 
 
@@ -93,6 +94,34 @@ public class CarController : MonoBehaviour
             steeringWheel = 0;
         }
 
+
+
+        if (Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            gearUp = true;
+        }
+
+        if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            gearDown = true;
+        }
+
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            startEngine = true;
+        }
+
+
+
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            blinkerLeft = true;
+        }
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            blinkerRight = true;
+        }
 
 #endif
     }
