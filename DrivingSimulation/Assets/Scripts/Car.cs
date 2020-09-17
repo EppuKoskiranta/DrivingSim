@@ -172,7 +172,7 @@ public class Car : MonoBehaviour
         Steer();
         Brake();
         CalculateTorque();
-        DebugSomeValues();
+        //DebugSomeValues();
         ApplyTorqueToWheels();
         CalculateSpeed();
     }
