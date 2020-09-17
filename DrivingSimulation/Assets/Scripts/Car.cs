@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using TMPro;
 using UnityEngine;
 
@@ -9,7 +10,7 @@ public class Car : MonoBehaviour
     //Light stuff
     enum LightMode
     {
-        DEFAULT,
+        DEFAULT = 0,
         ON,
         MIST,
 
@@ -17,14 +18,15 @@ public class Car : MonoBehaviour
 
     enum Lights
     {
-        ON = 0x01,
-        LONG = 0x02,
-        LEFTBLINKER = 0x03,
-        RIGHTBLINKER = 0x04,
+        DEFAULT = 0b_1,
+        LONG = 0b_10,
+        LEFTBLINKER = 0b_100,
+        RIGHTBLINKER = 0b_1000,
     }
 
     LightMode lightMode = LightMode.DEFAULT;
-    uint lights = 0x01;
+    uint lights = (uint)Lights.DEFAULT;
+    Light[] lightComponents;
 
     //Wipers
     enum Wipers
@@ -121,9 +123,8 @@ public class Car : MonoBehaviour
 
     //Air resistance
     float Cd = 0.35f; //coefficient
-    float volume = 3.11f; //volume
-    float density = 0f;
-    float dragArea = 2.5f; //squaremeters (estimate)
+    float density = 1f;
+    float dragArea = 1.5f; //squaremeters (estimate)
      
 
     //References
@@ -138,7 +139,7 @@ public class Car : MonoBehaviour
 
     void Start()
     {
-        CarInit();
+        SetupCar();
     }
 
     void Update()
@@ -152,7 +153,7 @@ public class Car : MonoBehaviour
         }
     }
 
-    void CarInit()
+    void SetupCar()
     {
         //Setup controller
         if (!controller)
@@ -166,7 +167,8 @@ public class Car : MonoBehaviour
         SetupWheels();
 
 
-        density = this.GetComponent<Rigidbody>().mass / volume;
+        //SetupLights
+        SetupLights();
     }
 
 
@@ -194,6 +196,19 @@ public class Car : MonoBehaviour
 
 
         wheels[0].wheel.ConfigureVehicleSubsteps(5.0f, 5, 2);
+    }
+
+
+
+    void SetupLights()
+    {
+        //0 LeftDefaultLight, 1 RightDefaultLight, 2 LeftLongLight, 
+        //3 RightLongLight, 4 LeftBrakeLight, 5 RightBrakeLight, 
+        //6 LeftFrontBlinker, 7 LeftRearBlinker, 8 RightFrontBlinker, 9 RightRearBlinker
+
+        lightComponents = this.transform.GetComponentsInChildren<Light>();
+
+
     }
 
 
@@ -263,6 +278,7 @@ public class Car : MonoBehaviour
         Handbrake();
         Steer();
         CalculateSpeed();
+        WidgetUpdate();
         DebugSomeValues();
     }
 
@@ -272,6 +288,9 @@ public class Car : MonoBehaviour
         {
             engineOn = true;
             controller.startEngine = false;
+
+            lightComponents[0].enabled = true;
+            lightComponents[1].enabled = true;
             Debug.Log("Started Engine!! VROM VROM!");
             //play audio
         }
@@ -303,7 +322,7 @@ public class Car : MonoBehaviour
 
         float gas = controller.gasPedal;
         if (roundsPerMinute < maxRPM)
-            roundsPerMinute += gas * 5000f * Time.deltaTime;
+            roundsPerMinute += gas * 10000f * Time.deltaTime;
 
         if (automatic)
             SwitchGearAutomatic();
@@ -339,7 +358,7 @@ public class Car : MonoBehaviour
     {
         if (roundsPerMinute > 0)
             roundsPerMinute -= CalculateFrictionForces() * Time.deltaTime;
-        else
+        else if (roundsPerMinute < 0)
             roundsPerMinute = 0;
     }
 
@@ -397,7 +416,6 @@ public class Car : MonoBehaviour
 
     void CalculateSpeed()
     {
-        //TODO make a way calculate speed
         speed = rb.velocity.magnitude * 3.6f;
 
     }
@@ -405,7 +423,7 @@ public class Car : MonoBehaviour
     float AirResistance()
     {
         return 0;
-        //return Cd * (density * Mathf.Pow(speed, 2) / 2) * dragArea;
+        //return 0.5f * density * Mathf.Pow(speed, 2) * Cd * dragArea;
     }
 
 
@@ -491,7 +509,8 @@ public class Car : MonoBehaviour
 
     void DebugSomeValues()
     {
-        Debug.Log("RPM: " + roundsPerMinute);
+        Debug.Log("Light bits: " + Convert.ToString(lights, toBase: 2));
+        //Debug.Log("RPM: " + roundsPerMinute);
         //Debug.Log("Speed: " + speed);
     }
 
@@ -545,10 +564,89 @@ public class Car : MonoBehaviour
     }
 
 
-    void WidgetInputs()
+    void WidgetUpdate()
+    {
+        //Switch mode //default, on, mist
+        LightSwitchMode();
+
+        //Turn lights on/off //blinkers, long lights
+        LightsUpdate();
+    }
+
+
+    void LightSwitchMode()
     {
 
+        if (controller.lightsModeLeft)
+        {
+            if (lightMode != LightMode.DEFAULT)
+            {
+                lightMode--;
+            }
+
+            controller.lightsModeLeft = false;
+        }
+
+        if (controller.lightsModeRight)
+        {
+            if (lightMode != LightMode.MIST)
+            {
+                lightMode++;
+            }
+
+            controller.lightsModeRight = false;
+        }
     }
+
+
+    void LightsUpdate()
+    {
+        if (controller.blinkerLeft)
+        {
+            lights |= (uint)Lights.LEFTBLINKER;
+            controller.blinkerLeft = false;
+        }
+
+
+        if (controller.blinkerRight)
+        {
+            lights |= (uint)Lights.RIGHTBLINKER;
+            controller.blinkerRight = false;
+        }
+
+        if (controller.longLights)
+        {
+            if (lightMode == LightMode.ON)
+            { 
+                lights ^= (uint)Lights.DEFAULT;
+                lights ^= (uint)Lights.LONG;
+
+                if ((int)lights >> 0 == 1)
+                {
+                    lightComponents[0].enabled = true;
+                    lightComponents[1].enabled = true;
+                }
+                else
+                {
+                    lightComponents[0].enabled = false;
+                    lightComponents[1].enabled = false;
+                }
+
+                if ((int)lights >> 1 == 1)
+                {
+                    lightComponents[2].enabled = true;
+                    lightComponents[3].enabled = true;
+                }
+                else
+                {
+                    lightComponents[2].enabled = false;
+                    lightComponents[3].enabled = false;
+                }
+            }
+            controller.longLights = false;
+        }
+    }
+
 
 
 

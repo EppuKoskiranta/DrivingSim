@@ -16,6 +16,11 @@ public class CarController : MonoBehaviour
     public bool handbrake = false;
     public bool blinkerLeft = false;
     public bool blinkerRight = false;
+    public bool longLights = false;
+    public bool lightsModeRight = false;
+    public bool lightsModeLeft = false;
+    public bool wiperUp = false;
+    public bool wiperDown = false;
 
 
 
@@ -121,6 +126,22 @@ public class CarController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E))
         {
             blinkerRight = true;
+        }
+
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            longLights = true;
+        }
+
+
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            lightsModeLeft = true;
+        }
+
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            lightsModeRight = true;
         }
 
 #endif
