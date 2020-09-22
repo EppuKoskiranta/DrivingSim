@@ -85,7 +85,7 @@ public class CarController : MonoBehaviour
             brakePedal = Mathf.InverseLerp(32000, -32000, rec.lRz);
 
 
-
+            //Buttons
             for (int i = 0; i < 128; i++)
             {
                 switch (i)
@@ -112,9 +112,37 @@ public class CarController : MonoBehaviour
                         break;
                     case 11:
                         break;
-                    case 12:
+                    case 12: //Gear upp
+                        if (gearUpReleased && rec.rgbButtons[i] == 128)
+                        {
+                            gearUpReleased = false;
+                            gearUp = true;
+                        }
+                        else if (!gearUpReleased && rec.rgbButtons[i] != 128)
+                        {
+                            gearUpReleased = true;
+                            gearUp = false;
+                        }
+                        else
+                        {
+                            gearUp = false;
+                        }
                         break;
-                    case 13:
+                    case 13: //Gear down
+                        if (gearDownReleased && rec.rgbButtons[i] == 128)
+                        {
+                            gearDownReleased = false;
+                            gearDown = true;
+                        }
+                        else if (!gearDownReleased && rec.rgbButtons[i] != 128)
+                        {
+                            gearDownReleased = true;
+                            gearDown = false;
+                        }
+                        else
+                        {
+                            gearDown = false;
+                        }
                         break;
                     case 14: //start engine
                         if (rec.rgbButtons[i] == 128)
@@ -214,6 +242,9 @@ public class CarController : MonoBehaviour
             {
                 lightsModeRight = true;
             }
+
+
+
         }
 
 #endif

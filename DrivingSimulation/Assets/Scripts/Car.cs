@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Security.Cryptography;
 using TMPro;
 using UnityEngine;
@@ -27,6 +28,8 @@ public class Car : MonoBehaviour
     LightMode lightMode = LightMode.DEFAULT;
     uint lights = (uint)Lights.DEFAULT;
     Light[] lightComponents;
+    bool wheelPastLeftThreshold = false;
+    bool wheelPastRightTreshold = false;
 
     //Wipers
     enum Wipers
@@ -367,6 +370,33 @@ public class Car : MonoBehaviour
         float turnProgress = Mathf.InverseLerp(-1, 1, controller.steeringWheel);
         float wheelAngle = Mathf.Lerp(-maxWheelAngle, maxWheelAngle, turnProgress);
 
+
+        //Automatically turns of the blinker if steer is straigthened out
+        if ((int)lights >> 2 == 1) //left blinker
+        {
+            if (controller.steeringWheel < -0.25f)
+            {
+                wheelPastLeftThreshold = true;
+            }
+            else if (controller.steeringWheel > -0.10f && wheelPastLeftThreshold)
+            {
+                lights ^= (uint)Lights.LEFTBLINKER;
+                wheelPastLeftThreshold = false;
+                controller.blinkerLeft = false;
+            }
+        }
+        if ((int)lights >> 3 == 1) //right blinker
+        {
+            if (controller.steeringWheel > 0.25f)
+                wheelPastRightTreshold = true;
+            else if (controller.steeringWheel < 0.10f && wheelPastRightTreshold)
+            {
+                lights ^= (uint)Lights.RIGHTBLINKER;
+                wheelPastRightTreshold = false;
+                controller.blinkerRight = false;
+            }
+        }
+
         //Turn wheel component
         foreach (Wheel w in wheels)
         {
@@ -410,8 +440,6 @@ public class Car : MonoBehaviour
             }
         }
 
-
-        Debug.Log("ActiveGearMode: " + automaticGearMode);
     }
 
     void CalculateSpeed()
@@ -603,15 +631,31 @@ public class Car : MonoBehaviour
     {
         if (controller.blinkerLeft)
         {
-            lights |= (uint)Lights.LEFTBLINKER;
+            if ((int)lights >> 3 == 1)
+            {
+                lights ^= (uint)Lights.RIGHTBLINKER;
+            }
+
+            lights ^= (uint)Lights.LEFTBLINKER;
+
+
             controller.blinkerLeft = false;
+            wheelPastLeftThreshold = false;
         }
 
 
         if (controller.blinkerRight)
         {
-            lights |= (uint)Lights.RIGHTBLINKER;
+            if ((int)lights >> 2 == 1)
+            {
+                lights ^= (uint)Lights.LEFTBLINKER;
+            }
+
+
+            lights ^= (uint)Lights.RIGHTBLINKER;
+
             controller.blinkerRight = false;
+            wheelPastRightTreshold = false;
         }
 
         if (controller.longLights)
