@@ -1456,7 +1456,7 @@ Light:
   m_Type: 1
   m_Shape: 0
   m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
-  m_Intensity: 0
+  m_Intensity: 1
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -2717,11 +2717,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c310923c214267f4e9a49d8b07dbe9c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  steeringWheel: 0
   gasPedal: 0
   brakePedal: 0
+  steeringWheel: 0
   gearUp: 0
+  gearUpReleased: 0
   gearDown: 0
+  gearDownReleased: 0
   startEngine: 0
   handbrake: 0
   blinkerLeft: 0
@@ -2736,6 +2738,18 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6211834521540050731, guid: 6609bdd3bfe3dc244aab1cd9f7aa4fee, type: 3}
   m_PrefabInstance: {fileID: 1268134057}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1671295965
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1671295961}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3047a8618a80261439a21993d26653a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1671295966
 MonoBehaviour:
   m_ObjectHideFlags: 0
