@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Policy;
 using UnityEngine;
 
 
@@ -49,9 +50,9 @@ public enum QUEST_EVENTS
 [Serializable]
 public struct QUEST_CONDITION
 {
-    public int state_index;
+    public CAR_STATES state_index;
     public bool state_needed_for_complete;
-    public QUEST_CONDITION(int i, bool s)
+    public QUEST_CONDITION(CAR_STATES i, bool s)
     {
         state_index = i;
         state_needed_for_complete = s;
@@ -64,65 +65,90 @@ public class Quest
     public QUEST_EVENTS state;
     public List<QUEST_CONDITION> complete_conditions = new List<QUEST_CONDITION>();
     public List<QUEST_CONDITION> fallback_conditions = new List<QUEST_CONDITION>();
-    public LevelLogic logic;
-    public int complete_quest_index;
-    public int fallback_quest_index;
+    public string instructions;
+    public int id;
+    public int complete_quest_id;
+    public int fallback_quest_id;
+    private bool[] car_states = new bool[(int)CAR_STATES.COUNT + 1];
 
-    public Quest()
+    public Quest(List<QUEST_CONDITION> com, List<QUEST_CONDITION> fall, string instr, int id, int com_id, int fall_id)
     {
-
+        complete_conditions.AddRange(com);
+        fallback_conditions.AddRange(fall);
+        instructions = instr;
+        this.id = id;
+        complete_quest_id = com_id;
+        fallback_quest_id = fall_id;
     }
 
-    public void Update()
+    public int UpdateFromLevel(bool[] car_states)
     {
+        this.car_states = car_states;
+        Debug.Log("INSTRUCTIONS: " + instructions);
         if (CheckCompleteConditions())
         {
-            complete();
+            return complete();
         }
         if (CheckFallbackConditions())
         {
-            fallback();
+            return fallback();
         }
+        // Default value
+        return id;
     }
 
     // Returns true if all the complete_conditions are met
     bool CheckCompleteConditions()
     {
-        foreach (var condition in complete_conditions)
+        if (complete_conditions.Count > 0)
         {
-            // Check all conditions if they're done
-            if (!logic.car_states[condition.state_index] == condition.state_needed_for_complete)
+            foreach (var condition in complete_conditions)
             {
-                return false;
+                // Check all conditions if they're done
+                if (car_states[(int)condition.state_index] != condition.state_needed_for_complete)
+                {
+                    return false;
+                }
             }
+            return true;
+            }   
+        else
+        {
+            return false;
         }
-        return true;
     }
 
     // Returns true if all the fallback_conditions are met
     bool CheckFallbackConditions()
     {
-        foreach (var condition in fallback_conditions)
+        if (fallback_conditions.Count > 0)
         {
-            // Check all conditions if they're done
-            if (!logic.car_states[condition.state_index] == condition.state_needed_for_complete)
+            foreach (var condition in fallback_conditions)
             {
-                return false;
+                // Check all conditions if they're done
+                if (car_states[(int)condition.state_index] != condition.state_needed_for_complete)
+                {
+                    return false;
+                }
             }
+            return true;
         }
-        return true;
+        else
+        {
+            return false;
+        }
     }
 
-    public QUEST_EVENTS complete()
+    public int complete()
     {
-        logic.change_current_quest(complete_quest_index);
-        return QUEST_EVENTS.QUEST_COMPLETED;
+        Debug.LogError("Completed quest: " + id);
+        return complete_quest_id;
     }
 
-    public QUEST_EVENTS fallback()
+    public int fallback()
     {
-        logic.change_current_quest(fallback_quest_index);
-        return QUEST_EVENTS.QUEST_FALLBACK;
+        Debug.LogError("Fallbacked quest: " + id);
+        return fallback_quest_id;
     }
 }
 
@@ -130,13 +156,21 @@ public class Quest
 public class Level
 {
     public List<Quest> quests = new List<Quest>();
-    public int id;
-
+    public Quest current_quest;
     List<QUEST_CONDITION> complete_condis = new List<QUEST_CONDITION>();
     List<QUEST_CONDITION> fallback_condis = new List<QUEST_CONDITION>();
-    int this_index = 0;
-    int c_index = 0;
-    int f_index = 0;
+
+    // Returns the next quest id, or the inputted id if not changed
+    public int UpdateFromLL(int current_quest_id, bool[] car_states)
+    {
+        // Finds the quest with current_quest_id in quests list
+        current_quest = quests.Find(element => element.id == current_quest_id);
+        if (current_quest != null)
+        {
+            return current_quest.UpdateFromLevel(car_states);
+        }
+        return current_quest_id;
+    }
 
     public CAR_STATES get_car_state_from_string(string s)
     {
@@ -176,11 +210,6 @@ public class Level
         {
             return false;
         }
-    }
-
-    public void add_quest(IEnumerable<QUEST_CONDITION> com, IEnumerable<QUEST_CONDITION> fall, int cqi, int fqi)
-    {
-        quests.Add(new Quest());
     }
 
 }

@@ -534,30 +534,123 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levels:
+  - quests:
+    - state: 0
+      complete_conditions:
+      - state_index: 3
+        state_needed_for_complete: 1
+      - state_index: 1
+        state_needed_for_complete: 1
+      fallback_conditions: []
+      instructions: Accelerate and move forwards
+      id: 1
+      complete_quest_id: 2
+      fallback_quest_id: 0
+    - state: 0
+      complete_conditions:
+      - state_index: 8
+        state_needed_for_complete: 1
+      - state_index: 1
+        state_needed_for_complete: 0
+      fallback_conditions:
+      - state_index: 2
+        state_needed_for_complete: 1
+      instructions: Drive into the trigger
+      id: 2
+      complete_quest_id: 3
+      fallback_quest_id: 4
+    current_quest:
+      state: 0
+      complete_conditions: []
+      fallback_conditions: []
+      instructions: 
+      id: 0
+      complete_quest_id: 0
+      fallback_quest_id: 0
   - quests: []
-    id: 0
+    current_quest:
+      state: 0
+      complete_conditions: []
+      fallback_conditions: []
+      instructions: 
+      id: 0
+      complete_quest_id: 0
+      fallback_quest_id: 0
   - quests: []
-    id: 0
+    current_quest:
+      state: 0
+      complete_conditions: []
+      fallback_conditions: []
+      instructions: 
+      id: 0
+      complete_quest_id: 0
+      fallback_quest_id: 0
   - quests: []
-    id: 0
+    current_quest:
+      state: 0
+      complete_conditions: []
+      fallback_conditions: []
+      instructions: 
+      id: 0
+      complete_quest_id: 0
+      fallback_quest_id: 0
   - quests: []
-    id: 0
+    current_quest:
+      state: 0
+      complete_conditions: []
+      fallback_conditions: []
+      instructions: 
+      id: 0
+      complete_quest_id: 0
+      fallback_quest_id: 0
   - quests: []
-    id: 0
+    current_quest:
+      state: 0
+      complete_conditions: []
+      fallback_conditions: []
+      instructions: 
+      id: 0
+      complete_quest_id: 0
+      fallback_quest_id: 0
   - quests: []
-    id: 0
+    current_quest:
+      state: 0
+      complete_conditions: []
+      fallback_conditions: []
+      instructions: 
+      id: 0
+      complete_quest_id: 0
+      fallback_quest_id: 0
   - quests: []
-    id: 0
+    current_quest:
+      state: 0
+      complete_conditions: []
+      fallback_conditions: []
+      instructions: 
+      id: 0
+      complete_quest_id: 0
+      fallback_quest_id: 0
   - quests: []
-    id: 0
+    current_quest:
+      state: 0
+      complete_conditions: []
+      fallback_conditions: []
+      instructions: 
+      id: 0
+      complete_quest_id: 0
+      fallback_quest_id: 0
   - quests: []
-    id: 0
-  - quests: []
-    id: 0
+    current_quest:
+      state: 0
+      complete_conditions: []
+      fallback_conditions: []
+      instructions: 
+      id: 0
+      complete_quest_id: 0
+      fallback_quest_id: 0
   level_id: 0
   car_states: 000000000000000000
-  quests: []
-  current_quest: 1
+  current_quest: 0
 --- !u!4 &452201415
 Transform:
   m_ObjectHideFlags: 0
@@ -566,7 +659,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 452201413}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 12.363543, y: -29.14106, z: -4938.764}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}

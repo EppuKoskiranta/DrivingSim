@@ -25,8 +25,7 @@ public class LevelLogic : MonoBehaviour
     public static LevelLogic current;
     public int level_id;
 
-    public bool[] car_states = new bool[(int)CAR_STATES.COUNT];
-    public List<Quest> quests = new List<Quest>();
+    public bool[] car_states;
     public int current_quest;
 
     public void change_current_quest(int id)
@@ -36,10 +35,16 @@ public class LevelLogic : MonoBehaviour
 
     public void Awake()
     {
-        car_states[(int)CAR_STATES.COUNT - 1] = true;
         //Initiate the singleton
         current = this;
+        car_states = new bool[(int)CAR_STATES.COUNT + 1];
+        start_level(0);
+    }
 
+    public void Update()
+    {
+        current_quest = levels[level_id].UpdateFromLL(current_quest, car_states);
+        UnityEngine.Debug.Log("Current Quest: " + current_quest);
     }
 
     public event Action<int> on_level_started;
