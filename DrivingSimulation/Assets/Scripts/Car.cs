@@ -83,6 +83,7 @@ public class Car : MonoBehaviour
     GearSystem gearSystem = GearSystem.AUTOMATIC;
 
 
+
     public enum AutomaticGearMode
     {
         PARK = 0,
@@ -93,6 +94,7 @@ public class Car : MonoBehaviour
 
     AutomaticGearMode automaticGearMode = AutomaticGearMode.PARK;
 
+
     //Motor stuff
     bool automatic = true;
     bool handbrake = false;
@@ -101,7 +103,9 @@ public class Car : MonoBehaviour
     float maxRPM = 6500f;
     float fuel = 70.0f;
     float roundsPerMinute = 0f;
+
     float rpmReduction = 1000f;
+
     float speed = 0f; //    km/h
     float horsePower = 200f;
     float motorTorque = 0f;
@@ -123,13 +127,17 @@ public class Car : MonoBehaviour
 
     //Air resistance
     float Cd = 0.35f; //coefficient
+
     float density = 1f;
     float dragArea = 1.5f; //squaremeters (estimate)
+
      
 
     //References
     public CarController controller;
+
     public Rigidbody rb;
+
 
     //Extras
     //like radio feat. skirmish beats
@@ -214,64 +222,6 @@ public class Car : MonoBehaviour
 
     void CarUpdate()
     {
-        //Take all inputs from controller
-        /*
-        
-
-        SwitchDriveMode()
-
-        Gas()
-        {
-            Read gasPedal value 0 - 1
-            Increase roundsPerMinute with gasPedal
-                
-            SwitchGear();
-            
-            CalculateTorque()
-            ApplyTorque()
-            
-            CalculateForcesAgainstMovement()
-            {
-                AirResistance
-                InternalExternal friction (includes engine friction, friction with gears, wheels friction)
-                
-            }
-
-
-            ReduceRoundsPerMinute()
-        }
-
-        Brake()
-        {
-            Read brakePedal value 0 - 1
-            ApplyBrakeTorque to wheels
-        }
-
-
-        Handbrake()
-        {
-            check if handbrake on
-            applybraketorque
-        }
-
-        Steer()
-        {
-            Read steeringWheel value -1 to 1
-            apply angle to wheels
-        }
-        
-        Inputs()
-        {
-            Wipers/Turn signals
-        }
-        
-
-        DebugValues()
-
-         */
-
-
-        //Gas
         SwitchDriveMode();
         AddGas();
         Brake();
@@ -300,6 +250,7 @@ public class Car : MonoBehaviour
     void Gas()
     {
         //increase rounds if gas pedal is pressed
+
         if (controller.gasPedal > 0 && speed < maxSpeed && engineOn)
         {
             roundsPerMinute += controller.gasPedal * gear[activeGear] * 200f * Time.deltaTime;
@@ -315,8 +266,6 @@ public class Car : MonoBehaviour
         }
 
     }
-
-
     void AddGas()
     {
 
@@ -343,8 +292,6 @@ public class Car : MonoBehaviour
 
         rb.AddForce(-this.transform.forward * AirResistance());
 
-        //TODO calculate real values
-
         totalFriction += 0f;
 
         totalFriction += 100 * ((1 / gear[activeGear]) * (roundsPerMinute / speed));
@@ -364,6 +311,7 @@ public class Car : MonoBehaviour
 
     void Steer()
     {
+
         float turnProgress = Mathf.InverseLerp(-1, 1, controller.steeringWheel);
         float wheelAngle = Mathf.Lerp(-maxWheelAngle, maxWheelAngle, turnProgress);
 
@@ -376,8 +324,6 @@ public class Car : MonoBehaviour
                 w.model.transform.localRotation = Quaternion.Euler(0, wheelAngle, 0); //model (visual only)
             }
         }
-
-
 
     }
 
@@ -417,7 +363,6 @@ public class Car : MonoBehaviour
     void CalculateSpeed()
     {
         speed = rb.velocity.magnitude * 3.6f;
-
     }
 
     float AirResistance()
@@ -492,6 +437,7 @@ public class Car : MonoBehaviour
 
     void CalculateTorque()
     {
+
         if (engineOn)
         {
             if (roundsPerMinute != 0 && controller.gasPedal != 0)
@@ -499,6 +445,7 @@ public class Car : MonoBehaviour
             else
                 motorTorque = 0;
         }
+
 
 
         if (motorTorque < 0)
@@ -516,6 +463,7 @@ public class Car : MonoBehaviour
 
     void ApplyTorqueToWheels()
     {
+
         float motorTorqueDir = 0f;
         if (automaticGearMode == AutomaticGearMode.DRIVE)
             motorTorqueDir = this.motorTorque;
@@ -533,7 +481,9 @@ public class Car : MonoBehaviour
                     {
                         if (w.axis == CarAxis.FRONT)
                         {
+
                             w.wheel.motorTorque = motorTorqueDir;
+
                         }
                     }
                     break;
@@ -542,6 +492,7 @@ public class Car : MonoBehaviour
                     {
                         if (w.axis == CarAxis.REAR)
                         {
+
                             w.wheel.motorTorque = motorTorqueDir;
                         }
                     }
@@ -549,6 +500,7 @@ public class Car : MonoBehaviour
                 case WheelDrive.ALLWHEEL:
                     foreach (Wheel w in wheels)
                     {
+
                         w.wheel.motorTorque = motorTorqueDir;
                     }
                     break;
@@ -560,6 +512,7 @@ public class Car : MonoBehaviour
             {
                 w.wheel.motorTorque = 0f;
             }
+
         }
     }
 
@@ -597,6 +550,7 @@ public class Car : MonoBehaviour
             controller.lightsModeRight = false;
         }
     }
+
 
 
     void LightsUpdate()
@@ -646,11 +600,6 @@ public class Car : MonoBehaviour
             controller.longLights = false;
         }
     }
-
-
-
-
-
 
 
 

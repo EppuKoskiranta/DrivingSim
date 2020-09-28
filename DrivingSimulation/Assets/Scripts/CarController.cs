@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Text;
 
+
 //Handles all input variables for car
 public class CarController : MonoBehaviour
 {
@@ -31,7 +32,6 @@ public class CarController : MonoBehaviour
     public bool lightsModeLeft = false;
     public bool wiperUp = false;
     public bool wiperDown = false;
-
 
 
     LogitechGSDK.LogiControllerPropertiesData properties;
@@ -65,6 +65,7 @@ public class CarController : MonoBehaviour
     void ProcessInput()
     {
         //Logitech Steering wheel car input
+
         if (LogitechGSDK.LogiUpdate() && LogitechGSDK.LogiIsConnected(0))
         {
             StringBuilder deviceName = new StringBuilder(256);
