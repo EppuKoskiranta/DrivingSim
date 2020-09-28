@@ -29,6 +29,7 @@
 
 #Library
 /Library/
+DrivingSimulation/Library/
 
 # Visual Studio cache directory
 .vs/
