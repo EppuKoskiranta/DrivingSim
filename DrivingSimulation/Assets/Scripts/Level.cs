@@ -62,6 +62,7 @@ public struct QUEST_CONDITION
 [Serializable]
 public class Quest
 {
+    public int target_id;
     public QUEST_EVENTS state;
     public List<QUEST_CONDITION> complete_conditions = new List<QUEST_CONDITION>();
     public List<QUEST_CONDITION> fallback_conditions = new List<QUEST_CONDITION>();
@@ -141,13 +142,13 @@ public class Quest
 
     public int complete()
     {
-        Debug.LogError("Completed quest: " + id);
+        Debug.Log("Completed quest: " + id);
         return complete_quest_id;
     }
 
     public int fallback()
     {
-        Debug.LogError("Fallbacked quest: " + id);
+        Debug.Log("Fallbacked quest: " + id);
         return fallback_quest_id;
     }
 }
@@ -155,10 +156,9 @@ public class Quest
 [Serializable]
 public class Level
 {
-    public List<Quest> quests = new List<Quest>();
+    public List<BoxCollider> targets;
+    public List<Quest> quests;
     public Quest current_quest;
-    List<QUEST_CONDITION> complete_condis = new List<QUEST_CONDITION>();
-    List<QUEST_CONDITION> fallback_condis = new List<QUEST_CONDITION>();
 
     // Returns the next quest id, or the inputted id if not changed
     public int UpdateFromLL(int current_quest_id, bool[] car_states)
@@ -170,6 +170,19 @@ public class Level
             return current_quest.UpdateFromLevel(car_states);
         }
         return current_quest_id;
+    }
+
+    public int GetIndexFromID(int in_id)
+    {
+        Quest tmp = quests.Find(element => element.id == in_id);
+        for (int i = 0; i < quests.Count; i++)
+        {
+            if (quests[i] == tmp)
+            {
+                return i;
+            }
+        }
+        return -999;
     }
 
     public CAR_STATES get_car_state_from_string(string s)

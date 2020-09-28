@@ -96,40 +96,40 @@ public class Car : MonoBehaviour
 
 
     //Motor stuff
-    bool automatic = true;
-    bool handbrake = false;
-    bool engineOn = false;
-    float maxSpeed = 250f;
-    float maxRPM = 6500f;
-    float fuel = 70.0f;
-    float roundsPerMinute = 0f;
+    public   bool automatic = true;
+    public   bool handbrake = false;
+    public   bool engineOn = false;
+    public   float maxSpeed = 250f;
+    public   float maxRPM = 6500f;
+    public   float fuel = 70.0f;
+    public   float roundsPerMinute = 0f;
 
-    float rpmReduction = 1000f;
+    public   float rpmReduction = 1000f;
+    public float direction = 0f;
+    public   float speed = 0f; //    km/h
+    public   float horsePower = 200f;
+    public   float motorTorque = 0f;
 
-    float speed = 0f; //    km/h
-    float horsePower = 200f;
-    float motorTorque = 0f;
 
+    public   int activeGear = 0;
+    public   int maxGear = 5;
+    public   float[] gear = { 3.166f, 1.882f, 1.296f, 0.972f, 0.738f, 0.600f };
 
-    int activeGear = 0;
-    int maxGear = 5;
-    float[] gear = { 3.166f, 1.882f, 1.296f, 0.972f, 0.738f, 0.600f };
+    public   float reverseGear = 2.6f;
 
-    float reverseGear = 2.6f;
-    
-    float tyreCircumference = 1.99271f;
-    float differentialRatio = 4.1f;
+    public   float tyreCircumference = 1.99271f;
+    public   float differentialRatio = 4.1f;
 
-    public float brakeTorque = 1620f;
+    public   float brakeTorque = 1620f;
 
-    float maxWheelAngle = 35f; //in euler angles
+    public   float maxWheelAngle = 35f; //in euler angles
 
 
     //Air resistance
-    float Cd = 0.35f; //coefficient
+    public   float Cd = 0.35f; //coefficient
 
-    float density = 1f;
-    float dragArea = 1.5f; //squaremeters (estimate)
+    public   float density = 1f;
+    public   float dragArea = 1.5f; //squaremeters (estimate)
 
      
 
@@ -362,6 +362,7 @@ public class Car : MonoBehaviour
 
     void CalculateSpeed()
     {
+        direction = transform.InverseTransformDirection(rb.velocity).z;
         speed = rb.velocity.magnitude * 3.6f;
     }
 
@@ -456,7 +457,7 @@ public class Car : MonoBehaviour
 
     void DebugSomeValues()
     {
-        Debug.Log("Light bits: " + Convert.ToString(lights, toBase: 2));
+        //Debug.Log("Light bits: " + Convert.ToString(lights, toBase: 2));
         //Debug.Log("RPM: " + roundsPerMinute);
         //Debug.Log("Speed: " + speed);
     }
