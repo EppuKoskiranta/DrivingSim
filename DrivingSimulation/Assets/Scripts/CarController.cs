@@ -114,8 +114,32 @@ public class CarController : MonoBehaviour
                     case 11:
                         break;
                     case 12:
+                        if (rec.rgbButtons[i] == 128)
+                        {
+                            if (gearUpReleased)
+                            {
+                                gearUpReleased = false;
+                                gearUp = true;
+                            }
+                        }
+                        else if (rec.rgbButtons[i] != 128)
+                        {
+                            gearUpReleased = true;
+                        }
                         break;
                     case 13:
+                        if (rec.rgbButtons[i] == 128)
+                        {
+                            if (gearDownReleased)
+                            {
+                                gearDownReleased = false;
+                                gearDown = true;
+                            }
+                        }
+                        else if (rec.rgbButtons[i] != 128)
+                        {
+                            gearDownReleased = true;
+                        }
                         break;
                     case 14: //start engine
                         if (rec.rgbButtons[i] == 128)
