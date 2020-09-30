@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class TrafficSystem : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    //References
+    public LevelLogic levelLogic;
+    public Car car;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+
+
+    public Vector3 correctDirection = Vector3.zero;
+    public float speedLimit = 0;
+    
+
+
 }
