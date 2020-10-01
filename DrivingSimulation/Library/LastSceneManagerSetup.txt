@@ -1,5 +1,5 @@
 sceneSetups:
-- path: Assets/Scenes/TrafficTest.unity
+- path: Assets/Scenes/kaapontestimaailma.unity
   isLoaded: 1
   isActive: 1
   isSubScene: 0

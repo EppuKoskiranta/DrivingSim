@@ -27,7 +27,6 @@ public class LevelLogic : MonoBehaviour
 
     // Make a singleton of this class.
     public Level[] levels = new Level[10];
-    public static LevelLogic current;
     public int level_id;
 
     public bool[] car_states;
@@ -41,10 +40,22 @@ public class LevelLogic : MonoBehaviour
     public void Awake()
     {
         car = GameObject.FindGameObjectWithTag("Car").GetComponent<Car>();
-        //Initiate the singleton
-        current = this;
         car_states = new bool[(int)CAR_STATES.COUNT + 1];
         start_level(0);
+    }
+
+    void Start()
+    {
+        EventsManager.instance.CollisionEvent += DetectCollision;
+    }
+
+    void DetectCollision(DS_EVENTS e)
+    {
+        if (e == DS_EVENTS.COLLISION_OBSTACLE)
+        {
+            UnityEngine.Debug.LogWarning("Collision obstacle");
+
+        }
     }
 
     public void Update()
