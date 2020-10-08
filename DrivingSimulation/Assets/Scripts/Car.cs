@@ -45,6 +45,8 @@ public class Car : MonoBehaviour
     float roundsPerMinute = 0f;
     float rpmReduction = 200f;
     float speed = 0f; //km/h cause fuck miles
+    float horsePower = 200f;
+    float motorTorque = 0f;
 
     int activeGear = 0;
     int maxGear = 5;
@@ -53,9 +55,19 @@ public class Car : MonoBehaviour
     float tyreCircumference = 1.99271f;
     float differentialRatio = 4.1f;
 
-    //testing stuff
+    //testing input stuff
     float gasPedal = -3000f;
     float breakPedal = 0.0f;
+    float steeringWheel = 0f;
+
+    float maxWheelAngle = 35f; //in euler angles
+
+
+
+
+    //Components
+    public WheelCollider wheelFrontLeft, wheelFrontRight, wheelRearLeft, wheelRearRight;
+    public GameObject wheelFrontLeftGo, wheelFrontRightGo, wheelRearLeftGo, wheelRearRightGo; 
 
     //Extras
     //like radio feat. skirmish beats
@@ -75,9 +87,10 @@ public class Car : MonoBehaviour
         ProcessInputKeyboard();
         AddGas();
         SwitchGearAutomatic();
-        CalculateSpeed();
+        Steer();
+        CalculateTorque();
         DebugSomeValues();
-        DebugMoveCar();
+        ApplyTorqueToWheels();
     }
 
 
@@ -90,6 +103,16 @@ public class Car : MonoBehaviour
         if (Input.GetKey(KeyCode.W))
         {
             gasPedal = 3000.0f;
+        }
+        if (Input.GetKey(KeyCode.D))
+        {
+            if (steeringWheel < 100f)
+                steeringWheel += 30f * Time.deltaTime;
+        }
+        if (Input.GetKey(KeyCode.A))
+        {
+            if (steeringWheel > -100)
+                steeringWheel -= 30f * Time.deltaTime;
         }
     }
 
@@ -109,6 +132,27 @@ public class Car : MonoBehaviour
 
     }
 
+
+    void Steer()
+    {
+        float turnProgress = Mathf.InverseLerp(-100, 100, steeringWheel);
+        float wheelAngle = Mathf.Lerp(-maxWheelAngle, maxWheelAngle, turnProgress);
+
+        //Turn wheel component
+        wheelFrontLeft.steerAngle = wheelAngle;
+        wheelFrontRight.steerAngle = wheelAngle;
+
+
+        //turn actual wheel (visual only)
+        wheelFrontLeftGo.transform.localRotation = Quaternion.Euler(0, wheelAngle, 0);
+        wheelFrontRightGo.transform.localRotation = Quaternion.Euler(0, wheelAngle, 0);
+    }
+
+
+    void Break()
+    {
+
+    }
 
     void SwitchGearAutomatic()
     {
@@ -144,10 +188,16 @@ public class Car : MonoBehaviour
         }
     }
 
-
-    void CalculateSpeed()
+    void CalculateTorque()
     {
-        speed = roundsPerMinute / 60 / differentialRatio / gear[activeGear] * tyreCircumference * 3.6f;
+        if (roundsPerMinute != 0)
+            motorTorque = horsePower / (roundsPerMinute / 5252);
+        else
+            motorTorque = 0;
+
+
+        if (motorTorque < 0)
+            motorTorque = 0;
     }
 
 
@@ -156,12 +206,21 @@ public class Car : MonoBehaviour
         //Debug.Log("InverseLerp value: " + Mathf.InverseLerp(-3000f, 3000f, gasPedal));
         Debug.Log("Gear" + activeGear + "Ratio: " + gear[activeGear]);
         Debug.Log("RPM:" + roundsPerMinute);
-        Debug.Log("Speed:" + speed);
+        Debug.Log("Torque:" + motorTorque);
     }
 
-    void DebugMoveCar()
+    void ApplyTorqueToWheels()
     {
-        transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z + speed / 3.6f * Time.deltaTime);
+        if (gasPedal > -3000f)
+        {
+            wheelFrontLeft.motorTorque = this.motorTorque;
+            wheelFrontRight.motorTorque = this.motorTorque;
+        }
+        else
+        {
+            wheelFrontLeft.motorTorque = 0;
+            wheelFrontRight.motorTorque = 0;
+        }
     }
 
 
