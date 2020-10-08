@@ -73,7 +73,6 @@ public class LevelLogic : MonoBehaviour
         this.level_id = level_id;
     }
 
-
     public void ReadCarStates()
     {
         car_states[0] = car.engineOn;
@@ -85,7 +84,9 @@ public class LevelLogic : MonoBehaviour
         // Updates Inside target of the quest of the level
         if (current_quest != 0 && current_quest != -999)
         {
-            car_states[8] = levels[level_id].targets[levels[level_id].quests[levels[level_id].GetIndexFromID(current_quest)].target_id].GetComponent<TargetTrigger>().inside_target;
+            car_states[(int) CAR_STATES.IS_IN_TARGET_TRIGGER] = 
+                levels[level_id].targets[levels[level_id].quests[levels[level_id]
+                .GetIndexFromID(current_quest)].target_id].GetComponent<TargetTrigger>().inside_target;
         }
     }
 }
