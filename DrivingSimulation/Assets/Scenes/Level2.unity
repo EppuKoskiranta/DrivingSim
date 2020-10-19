@@ -3076,7 +3076,67 @@ MonoBehaviour:
       fallback_quest_id: 0
   - targets:
     - {fileID: 1928904143}
-    quests: []
+    quests:
+    - target_id: 0
+      complete_conditions:
+      - state_index: 0
+        state_needed_for_complete: 1
+      fallback_conditions: []
+      instructions: Start the engine
+      id: 1
+      complete_quest_id: 2
+      fallback_quest_id: 0
+    - target_id: 0
+      complete_conditions:
+      - state_index: 1
+        state_needed_for_complete: 1
+      fallback_conditions:
+      - state_index: 2
+        state_needed_for_complete: 1
+      instructions: Drive forwards and dodge the cones
+      id: 2
+      complete_quest_id: 3
+      fallback_quest_id: 5
+    - target_id: 0
+      complete_conditions:
+      - state_index: 8
+        state_needed_for_complete: 1
+      fallback_conditions: []
+      instructions: Dodge the cones and move to the target area.
+      id: 3
+      complete_quest_id: 4
+      fallback_quest_id: 0
+    - target_id: 0
+      complete_conditions:
+      - state_index: 8
+        state_needed_for_complete: 1
+      - state_index: 1
+        state_needed_for_complete: 0
+      - state_index: 2
+        state_needed_for_complete: 0
+      fallback_conditions: []
+      instructions: Stop the car in the target area.
+      id: 4
+      complete_quest_id: 10
+      fallback_quest_id: 7
+    - target_id: 0
+      complete_conditions:
+      - state_index: 1
+        state_needed_for_complete: 1
+      fallback_conditions: []
+      instructions: Move forwards, not backwards
+      id: 5
+      complete_quest_id: 2
+      fallback_quest_id: 0
+    - target_id: 0
+      complete_conditions:
+      - state_index: 8
+        state_needed_for_complete: 1
+      fallback_conditions: []
+      instructions: Move to the target area.
+      id: 7
+      complete_quest_id: 4
+      fallback_quest_id: 0
     current_quest:
       target_id: 0
       complete_conditions: []
