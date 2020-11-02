@@ -37,9 +37,10 @@ public enum DS_EVENTS
 }
 
 [Serializable]
-public enum QUEST_EVENTS
+public enum QUEST_EVENT
 {
-    QUEST_STARTED = 0,
+    QUEST_NOT_STARTED,
+    QUEST_STARTED,
     QUEST_RUNNING,
     QUEST_COMPLETED,
     QUEST_FALLBACK,
@@ -63,7 +64,6 @@ public struct QUEST_CONDITION
 public class Quest
 {
     public int target_id;
-    public QUEST_EVENTS state;
     public List<QUEST_CONDITION> complete_conditions = new List<QUEST_CONDITION>();
     public List<QUEST_CONDITION> fallback_conditions = new List<QUEST_CONDITION>();
     public string instructions;
@@ -213,6 +213,7 @@ public class Level
                 return CAR_STATES.COUNT;
         }
     }
+
     public bool get_bool_from_string(string s)
     {
         if (s == "true")

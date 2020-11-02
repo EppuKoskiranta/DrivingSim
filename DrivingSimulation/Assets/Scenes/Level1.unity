@@ -288,6 +288,49 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!1 &1223027777
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1223027778}
+  - component: {fileID: 1223027779}
+  m_Layer: 0
+  m_Name: EventsManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1223027778
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1223027777}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.598305, y: 4.441757, z: 20.967289}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1223027779
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1223027777}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b711e696a01bce548920db4ab6ef123e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1524287244
 GameObject:
   m_ObjectHideFlags: 0
@@ -527,7 +570,6 @@ MonoBehaviour:
     - {fileID: 1928904143}
     quests:
     - target_id: 0
-      state: 0
       complete_conditions:
       - state_index: 0
         state_needed_for_complete: 1
@@ -537,7 +579,6 @@ MonoBehaviour:
       complete_quest_id: 2
       fallback_quest_id: 0
     - target_id: 0
-      state: 0
       complete_conditions:
       - state_index: 1
         state_needed_for_complete: 1
@@ -549,7 +590,6 @@ MonoBehaviour:
       complete_quest_id: 3
       fallback_quest_id: 5
     - target_id: 0
-      state: 0
       complete_conditions:
       - state_index: 8
         state_needed_for_complete: 1
@@ -559,7 +599,6 @@ MonoBehaviour:
       complete_quest_id: 4
       fallback_quest_id: 0
     - target_id: 0
-      state: 0
       complete_conditions:
       - state_index: 8
         state_needed_for_complete: 1
@@ -575,7 +614,6 @@ MonoBehaviour:
       complete_quest_id: 10
       fallback_quest_id: 7
     - target_id: 0
-      state: 0
       complete_conditions:
       - state_index: 8
         state_needed_for_complete: 1
@@ -585,7 +623,6 @@ MonoBehaviour:
       complete_quest_id: 4
       fallback_quest_id: 0
     - target_id: 0
-      state: 0
       complete_conditions:
       - state_index: 1
         state_needed_for_complete: 1
@@ -595,7 +632,6 @@ MonoBehaviour:
       complete_quest_id: 2
       fallback_quest_id: 0
     - target_id: 0
-      state: 0
       complete_conditions: []
       fallback_conditions: []
       instructions: You finished the level
@@ -604,7 +640,6 @@ MonoBehaviour:
       fallback_quest_id: 0
     current_quest:
       target_id: 0
-      state: 0
       complete_conditions: []
       fallback_conditions: []
       instructions: 
@@ -615,7 +650,6 @@ MonoBehaviour:
     quests: []
     current_quest:
       target_id: 0
-      state: 0
       complete_conditions: []
       fallback_conditions: []
       instructions: 
@@ -626,7 +660,6 @@ MonoBehaviour:
     quests: []
     current_quest:
       target_id: 0
-      state: 0
       complete_conditions: []
       fallback_conditions: []
       instructions: 
@@ -637,7 +670,6 @@ MonoBehaviour:
     quests: []
     current_quest:
       target_id: 0
-      state: 0
       complete_conditions: []
       fallback_conditions: []
       instructions: 
@@ -648,7 +680,6 @@ MonoBehaviour:
     quests: []
     current_quest:
       target_id: 0
-      state: 0
       complete_conditions: []
       fallback_conditions: []
       instructions: 
@@ -659,7 +690,6 @@ MonoBehaviour:
     quests: []
     current_quest:
       target_id: 0
-      state: 0
       complete_conditions: []
       fallback_conditions: []
       instructions: 
@@ -670,7 +700,6 @@ MonoBehaviour:
     quests: []
     current_quest:
       target_id: 0
-      state: 0
       complete_conditions: []
       fallback_conditions: []
       instructions: 
@@ -681,7 +710,6 @@ MonoBehaviour:
     quests: []
     current_quest:
       target_id: 0
-      state: 0
       complete_conditions: []
       fallback_conditions: []
       instructions: 
@@ -692,7 +720,6 @@ MonoBehaviour:
     quests: []
     current_quest:
       target_id: 0
-      state: 0
       complete_conditions: []
       fallback_conditions: []
       instructions: 
@@ -703,7 +730,6 @@ MonoBehaviour:
     quests: []
     current_quest:
       target_id: 0
-      state: 0
       complete_conditions: []
       fallback_conditions: []
       instructions: 

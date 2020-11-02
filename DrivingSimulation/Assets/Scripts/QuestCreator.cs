@@ -21,13 +21,11 @@ public class QuestCreator : ScriptableWizard
     static void CreateWizard()
     {
         ScriptableWizard.DisplayWizard<QuestCreator>("Create Quest", "Exit", "Apply");
-        //If you don't want to use the secondary button simply leave it out:
-        //ScriptableWizard.DisplayWizard<QuestCreator>("Create Light", "Create");
     }
 
     void OnWizardCreate()
     {
-        
+        // just exits the wizard
     }
 
     void OnWizardUpdate()
