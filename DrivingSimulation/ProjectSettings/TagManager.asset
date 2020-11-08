@@ -7,6 +7,7 @@ TagManager:
   - Level
   - levellogic
   - Car
+  - CarCollider
   layers:
   - Default
   - TransparentFX
