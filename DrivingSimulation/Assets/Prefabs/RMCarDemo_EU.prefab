@@ -1242,9 +1242,10 @@ GameObject:
   - component: {fileID: 8663689309075197416}
   - component: {fileID: 8663689309075197417}
   - component: {fileID: 8663689309075197420}
+  - component: {fileID: 1412317782}
   m_Layer: 0
   m_Name: RMCarDemo_EU
-  m_TagString: Untagged
+  m_TagString: Car
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1427,9 +1428,140 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   wheelMode: 0
+  engineStart: {fileID: 8300000, guid: 265b368b99288e64482fd9b690576266, type: 3}
+  engineRunnning: {fileID: 8300000, guid: 24fe3d1e648f98f4eb01ec41f2e20108, type: 3}
+  automatic: 1
+  handbrake: 0
+  engineOn: 0
+  maxSpeed: 250
+  maxRPM: 6500
+  fuel: 70
+  roundsPerMinute: 0
+  rpmReduction: 1000
+  direction: 0
+  speed: 0
+  horsePower: 200
+  motorTorque: 0
+  activeGear: 0
+  maxGear: 5
+  gear:
+  - 3.166
+  - 1.882
+  - 1.296
+  - 0.972
+  - 0.738
+  - 0.6
+  reverseGear: 2.6
+  tyreCircumference: 1.99271
+  differentialRatio: 4.1
   brakeTorque: 1620
+  maxWheelAngle: 35
+  Cd: 0.35
+  density: 1
+  dragArea: 1.5
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 0
+  carAudio: {fileID: 1412317782}
   controller: {fileID: 8663689309075197417}
+  trafficSystem: {fileID: 0}
   rb: {fileID: 8663689309075197416}
+--- !u!82 &1412317782
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1753057813489042339}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &1902475332125919311
 GameObject:
   m_ObjectHideFlags: 0
@@ -4914,7 +5046,7 @@ GameObject:
   - component: {fileID: 7449711993635795231}
   m_Layer: 0
   m_Name: RMCDemo_Body_col
-  m_TagString: Untagged
+  m_TagString: CarCollider
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4990,7 +5122,7 @@ MeshCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7449711993635795230}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 4
   m_Convex: 1
@@ -5997,6 +6129,7 @@ GameObject:
   - component: {fileID: 8663689308253333998}
   - component: {fileID: 8663689308253333996}
   - component: {fileID: 8663689308253333999}
+  - component: {fileID: 422527941}
   m_Layer: 0
   m_Name: Inside Camera
   m_TagString: MainCamera
@@ -6011,13 +6144,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8663689308253333993}
-  m_LocalRotation: {x: 0.026364613, y: -0, z: -0, w: 0.9996524}
-  m_LocalPosition: {x: -0.33, y: 1, z: -0.05}
+  m_LocalRotation: {x: 0.05625719, y: 0, z: 0, w: 0.9984163}
+  m_LocalPosition: {x: -0.3, y: 1.01, z: -0.22}
   m_LocalScale: {x: 1.6, y: 1, z: 3}
   m_Children: []
   m_Father: {fileID: 3318947402532663728}
   m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: 3.022, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 6.45, y: 0, z: 0}
 --- !u!20 &8663689308253333996
 Camera:
   m_ObjectHideFlags: 0
@@ -6027,7 +6160,7 @@ Camera:
   m_GameObject: {fileID: 8663689308253333993}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 2
+  m_ClearFlags: 1
   m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
@@ -6069,6 +6202,19 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8663689308253333993}
   m_Enabled: 1
+--- !u!114 &422527941
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8663689308253333993}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3e655c9c74ccb2469ff9259655e7593, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  car: {fileID: 0}
 --- !u!1 &8663689308409455006
 GameObject:
   m_ObjectHideFlags: 0

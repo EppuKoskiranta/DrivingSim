@@ -2451,24 +2451,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1722500730461665547, guid: 722880a05104e474c8ecd73f5076a9ea, type: 3}
   m_PrefabInstance: {fileID: 410636075}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &422527937 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8663689308253333993, guid: 72601951b7a32ef4bacde9e145a105ff, type: 3}
-  m_PrefabInstance: {fileID: 915074424}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &422527941
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 422527937}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b3e655c9c74ccb2469ff9259655e7593, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  car: {fileID: 0}
 --- !u!1001 &428335270
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5012,17 +4994,9 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1498995124086220981, guid: 72601951b7a32ef4bacde9e145a105ff, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 1753057813489042339, guid: 72601951b7a32ef4bacde9e145a105ff, type: 3}
       propertyPath: m_Name
       value: RMCarDemo_EU
-      objectReference: {fileID: 0}
-    - target: {fileID: 1753057813489042339, guid: 72601951b7a32ef4bacde9e145a105ff, type: 3}
-      propertyPath: m_TagString
-      value: Car
       objectReference: {fileID: 0}
     - target: {fileID: 3318947402532663728, guid: 72601951b7a32ef4bacde9e145a105ff, type: 3}
       propertyPath: m_LocalPosition.x
@@ -5067,54 +5041,6 @@ PrefabInstance:
     - target: {fileID: 3318947402532663728, guid: 72601951b7a32ef4bacde9e145a105ff, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7449711993635795230, guid: 72601951b7a32ef4bacde9e145a105ff, type: 3}
-      propertyPath: m_TagString
-      value: CarCollider
-      objectReference: {fileID: 0}
-    - target: {fileID: 7449711993635795230, guid: 72601951b7a32ef4bacde9e145a105ff, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7449711993635795231, guid: 72601951b7a32ef4bacde9e145a105ff, type: 3}
-      propertyPath: m_IsTrigger
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8663689308253333996, guid: 72601951b7a32ef4bacde9e145a105ff, type: 3}
-      propertyPath: m_ClearFlags
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8663689308253333998, guid: 72601951b7a32ef4bacde9e145a105ff, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 1.01
-      objectReference: {fileID: 0}
-    - target: {fileID: 8663689308253333998, guid: 72601951b7a32ef4bacde9e145a105ff, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -0.22
-      objectReference: {fileID: 0}
-    - target: {fileID: 8663689308253333998, guid: 72601951b7a32ef4bacde9e145a105ff, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -0.3
-      objectReference: {fileID: 0}
-    - target: {fileID: 8663689308253333998, guid: 72601951b7a32ef4bacde9e145a105ff, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0.05625719
-      objectReference: {fileID: 0}
-    - target: {fileID: 8663689308253333998, guid: 72601951b7a32ef4bacde9e145a105ff, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8663689308253333998, guid: 72601951b7a32ef4bacde9e145a105ff, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8663689308253333998, guid: 72601951b7a32ef4bacde9e145a105ff, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.9984163
-      objectReference: {fileID: 0}
-    - target: {fileID: 8663689308253333998, guid: 72601951b7a32ef4bacde9e145a105ff, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 6.45
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 72601951b7a32ef4bacde9e145a105ff, type: 3}
