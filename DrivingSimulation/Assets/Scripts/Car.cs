@@ -94,6 +94,10 @@ public class Car : MonoBehaviour
 
     AutomaticGearMode automaticGearMode = AutomaticGearMode.PARK;
 
+    //Sounds
+    public AudioClip engineStart;
+    public AudioClip engineRunnning;
+
 
     //Motor stuff
     public   bool automatic = true;
@@ -131,11 +135,13 @@ public class Car : MonoBehaviour
     public   float density = 1f;
     public   float dragArea = 1.5f; //squaremeters (estimate)
 
-     
+
+    public LayerMask layerMask;
 
     //References
+    public AudioSource carAudio;
     public CarController controller;
-
+    public TrafficSystem trafficSystem;
     public Rigidbody rb;
 
 
@@ -152,6 +158,8 @@ public class Car : MonoBehaviour
 
     void Update()
     {
+        CheckWhichRoadCarIsOn();
+
         if (!engineOn)
             StartEngine();
 
@@ -170,6 +178,11 @@ public class Car : MonoBehaviour
         if (!rb)
             rb = this.gameObject.GetComponent<Rigidbody>();
 
+
+        if (!carAudio)
+        {
+            carAudio = this.gameObject.GetComponentInChildren<AudioSource>();
+        }
 
         //Setup wheels
         SetupWheels();
@@ -229,6 +242,7 @@ public class Car : MonoBehaviour
         Steer();
         CalculateSpeed();
         WidgetUpdate();
+        Sounds();
         DebugSomeValues();
     }
 
@@ -242,10 +256,24 @@ public class Car : MonoBehaviour
             lightComponents[0].enabled = true;
             lightComponents[1].enabled = true;
             Debug.Log("Started Engine!! VROM VROM!");
-            //play audio
+            carAudio.PlayOneShot(engineStart);
+            StartCoroutine(EngineRunning());
         }
     }
 
+
+    void Sounds()
+    {
+        
+    }
+
+    IEnumerator EngineRunning()
+    {
+        yield return new WaitForSecondsRealtime(engineStart.length);
+        carAudio.clip = engineRunnning;
+        carAudio.loop = true;
+        carAudio.Play();
+    }
 
     void Gas()
     {
@@ -356,8 +384,6 @@ public class Car : MonoBehaviour
             }
         }
 
-
-        Debug.Log("ActiveGearMode: " + automaticGearMode);
     }
 
     void CalculateSpeed()
@@ -525,6 +551,7 @@ public class Car : MonoBehaviour
 
         //Turn lights on/off //blinkers, long lights
         LightsUpdate();
+
     }
 
 
@@ -599,6 +626,28 @@ public class Car : MonoBehaviour
                 }
             }
             controller.longLights = false;
+        }
+    }
+
+
+
+    void CheckWhichRoadCarIsOn()
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(this.transform.position + new Vector3(0, 1, 0), new Vector3(0, -1, 0), out hit,  Mathf.Infinity, layerMask))
+        {
+            if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Road"))
+            {
+                Road road = hit.collider.gameObject.transform.parent.GetComponent<Road>();
+                trafficSystem.currentRoad = road;
+                trafficSystem.currentIntersection = null;
+            }
+            else if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Intersection"))
+            {
+                Intersection intersection = hit.collider.GetComponent<Intersection>();
+                trafficSystem.currentIntersection = intersection;
+                trafficSystem.currentRoad = null;
+            }
         }
     }
 
