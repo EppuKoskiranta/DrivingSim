@@ -18,6 +18,10 @@ public class TrafficSystem : MonoBehaviour
     public float WrongDirectionAngle = 90f;
 
 
+    public bool wrongDirection = false;
+    public bool inSpeedlimit = true;
+
+
     private void Awake()
     {
         
@@ -27,11 +31,19 @@ public class TrafficSystem : MonoBehaviour
 
     void Update()
     {
-        RightDirection();
-        InSpeedLimit();
+        wrongDirection = !RightDirection();
+        inSpeedlimit = InSpeedLimit();
+
+        SendInformationToLevelLogic();
     }
 
-
+    void SendInformationToLevelLogic()
+    {
+        if (levelLogic)
+        {
+            levelLogic.ReadTraficSystem(wrongDirection, inSpeedlimit);
+        }
+    }
 
     bool RightDirection()
     {

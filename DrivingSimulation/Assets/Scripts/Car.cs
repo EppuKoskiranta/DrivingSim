@@ -8,7 +8,7 @@ using UnityEngine;
 public class Car : MonoBehaviour
 {
     //Light stuff
-    enum LightMode
+    public enum LightMode
     {
         DEFAULT = 0,
         ON,
@@ -16,16 +16,32 @@ public class Car : MonoBehaviour
 
     }
 
-    enum Lights
+    //public enum Lights
+    //{
+    //    DEFAULT = 0b_1,
+    //    LONG = 0b_10,
+    //    LEFTBLINKER = 0b_100,
+    //    RIGHTBLINKER = 0b_1000,
+    //}
+
+    public struct Lights
     {
-        DEFAULT = 0b_1,
-        LONG = 0b_10,
-        LEFTBLINKER = 0b_100,
-        RIGHTBLINKER = 0b_1000,
+        public bool defaultLights;
+        public bool longLights;
+        public bool leftBlinker;
+        public bool rightBlinker;
+
+        public Lights(bool d = true, bool ll = false, bool lb = false, bool rb = false)
+        {
+            defaultLights = d;
+            longLights = ll;
+            leftBlinker = lb;
+            rightBlinker = rb;
+        }
     }
 
-    LightMode lightMode = LightMode.DEFAULT;
-    uint lights = (uint)Lights.DEFAULT;
+    public LightMode lightMode = LightMode.DEFAULT;
+    public Lights lights = new Lights();
     Light[] lightComponents;
 
     //Wipers
@@ -585,45 +601,36 @@ public class Car : MonoBehaviour
     {
         if (controller.blinkerLeft)
         {
-            lights |= (uint)Lights.LEFTBLINKER;
+            lights.leftBlinker = !lights.leftBlinker;
+            lights.rightBlinker = false;
             controller.blinkerLeft = false;
         }
 
 
         if (controller.blinkerRight)
         {
-            lights |= (uint)Lights.RIGHTBLINKER;
+            lights.rightBlinker = !lights.rightBlinker;
+            lights.leftBlinker = false;
             controller.blinkerRight = false;
         }
 
         if (controller.longLights)
         {
             if (lightMode == LightMode.ON)
-            { 
-                lights ^= (uint)Lights.DEFAULT;
-                lights ^= (uint)Lights.LONG;
+            {
+                //risky to toggle them on/off. Since if they get changed outside of this
+                lights.defaultLights = !lights.defaultLights;
+                lights.longLights = !lights.longLights;
 
-                if ((int)lights >> 0 == 1)
-                {
-                    lightComponents[0].enabled = true;
-                    lightComponents[1].enabled = true;
-                }
-                else
-                {
-                    lightComponents[0].enabled = false;
-                    lightComponents[1].enabled = false;
-                }
+                //Setting the actual unity Light component on/off
+                //default lights
+                lightComponents[1].enabled = lights.defaultLights;
+                lightComponents[2].enabled = lights.defaultLights;
 
-                if ((int)lights >> 1 == 1)
-                {
-                    lightComponents[2].enabled = true;
-                    lightComponents[3].enabled = true;
-                }
-                else
-                {
-                    lightComponents[2].enabled = false;
-                    lightComponents[3].enabled = false;
-                }
+                //long lights
+                lightComponents[3].enabled = lights.longLights;
+                lightComponents[4].enabled = lights.longLights;
+
             }
             controller.longLights = false;
         }

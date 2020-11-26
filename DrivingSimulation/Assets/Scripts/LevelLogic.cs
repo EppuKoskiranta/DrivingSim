@@ -89,4 +89,11 @@ public class LevelLogic : MonoBehaviour
                 .GetIndexFromID(current_quest)].target_id].GetComponent<TargetTrigger>().inside_target;
         }
     }
+
+
+    public void ReadTraficSystem(bool wrongDirection, bool inSpeedlimit)
+    {
+        car_states[6] = wrongDirection;
+        car_states[7] = inSpeedlimit;
+    }
 }
